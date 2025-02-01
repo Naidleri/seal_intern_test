@@ -3,6 +3,7 @@ package com.haris.starwars_character.ui.presentation
 import android.content.Intent
 import android.provider.Settings
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +24,7 @@ import com.haris.starwars_character.ui.component.EmptyScreen
 import com.haris.starwars_character.ui.component.ErrorModalBottomSheet
 import com.haris.starwars_character.ui.component.LoadingScreen
 import com.haris.starwars_character.ui.component.LoadingScreenAppend
+import com.haris.starwars_character.ui.component.SearchBar
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -33,6 +35,7 @@ fun HomeScreen(
     val people = viewModel.people.collectAsLazyPagingItems()
     val context = LocalContext.current
     var showErrorSheet by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf("") }
 
     ErrorModalBottomSheet(
         isVisible = showErrorSheet,
@@ -45,16 +48,34 @@ fun HomeScreen(
         }
     )
 
-    HomeContent(
-        people = people,
-        modifier = modifier,
-        onShowErrorSheet = { showErrorSheet = it },
-        onRetry = { people.retry() },
-        onSettings = {
-            val intent = Intent(Settings.ACTION_SETTINGS)
-            context.startActivity(intent)
-        }
-    )
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        SearchBar(
+            query = searchQuery,
+            onQueryChange = { newQuery ->
+                searchQuery = newQuery
+            },
+            onSearch = { query ->
+                viewModel.setSearchQuery(query)
+            },
+            modifier = Modifier
+        )
+        // Tambahkan FilterScreenHome di bagian atas
+        FilterScreenHome(viewModel = viewModel)
+
+        // Tampilkan data di bawahnya
+        HomeContent(
+            people = people,
+            modifier = modifier.weight(1f), // Mengisi sisa ruang yang tersedia
+            onShowErrorSheet = { showErrorSheet = it },
+            onRetry = { people.retry() },
+            onSettings = {
+                val intent = Intent(Settings.ACTION_SETTINGS)
+                context.startActivity(intent)
+            }
+        )
+    }
 }
 
 @Composable

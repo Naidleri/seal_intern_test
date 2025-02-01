@@ -9,7 +9,7 @@ import com.haris.core.domain.repository.IPeopleRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class PeopleInteractor(
+class PeopleUseCaseImpl(
     private val peopleRepository: IPeopleRepository
 ) : PeopleUseCase {
     override fun getPeople(filterOptions: FilterOptions?): Flow<PagingData<People>> {

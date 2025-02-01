@@ -63,7 +63,8 @@ dependencies {
     implementation(libs.androidx.paging.compose)
     implementation (libs.koin.android)
     implementation (libs.koin.androidx.compose)
-    implementation ("com.airbnb.android:lottie-compose:6.0.0")
+    implementation(libs.androidx.navigation.compose)
+    implementation (libs.lottie.compose)
 
     implementation(project(":core"))
 }
