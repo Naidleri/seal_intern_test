@@ -26,11 +26,14 @@ import com.haris.starwars_character.ui.component.LoadingScreen
 import com.haris.starwars_character.ui.component.LoadingScreenAppend
 import com.haris.starwars_character.ui.component.SearchBar
 import org.koin.androidx.compose.koinViewModel
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = koinViewModel()
+    viewModel: HomeViewModel = koinViewModel(),
+    navigateToDetail: (String) -> Unit
 ) {
     val people = viewModel.people.collectAsLazyPagingItems()
     val context = LocalContext.current
@@ -61,19 +64,21 @@ fun HomeScreen(
             },
             modifier = Modifier
         )
-        // Tambahkan FilterScreenHome di bagian atas
         FilterScreenHome(viewModel = viewModel)
 
-        // Tampilkan data di bawahnya
         HomeContent(
             people = people,
-            modifier = modifier.weight(1f), // Mengisi sisa ruang yang tersedia
             onShowErrorSheet = { showErrorSheet = it },
             onRetry = { people.retry() },
             onSettings = {
                 val intent = Intent(Settings.ACTION_SETTINGS)
                 context.startActivity(intent)
-            }
+            },
+            navigateToDetail = { url ->
+                val encodedUrl = URLEncoder.encode(url, StandardCharsets.UTF_8.toString())
+                navigateToDetail(encodedUrl)
+            },
+            modifier = modifier.weight(1f)
         )
     }
 }
@@ -84,7 +89,8 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     onShowErrorSheet: (Boolean) -> Unit,
     onRetry: () -> Unit,
-    onSettings: () -> Unit
+    onSettings: () -> Unit,
+    navigateToDetail: (String) -> Unit
 ) {
     val loadState = people.loadState
     var showErrorSheet by remember { mutableStateOf(false) }
@@ -133,7 +139,9 @@ fun HomeContent(
                         CardPeople(
                             name = it.name ?: "Unknown",
                             height = it.height?.toIntOrNull() ?: 0,
-                            onClick = {}
+                            url = it.url,
+                            onItemClick = { url -> navigateToDetail(url) },
+                            modifier = Modifier
                         )
                     }
                 }

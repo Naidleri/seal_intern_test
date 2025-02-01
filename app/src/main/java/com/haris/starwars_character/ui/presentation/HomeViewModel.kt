@@ -18,6 +18,9 @@ class HomeViewModel(
     private val _people = MutableStateFlow<PagingData<People>>(PagingData.empty())
     val people: StateFlow<PagingData<People>> get() = _people
 
+    private val _peopleId = MutableStateFlow<People?>(null)
+    val peopleId: StateFlow<People?> get() = _peopleId
+
     private val currentFilterOptions = MutableStateFlow(FilterOptions())
 
     init {
@@ -30,6 +33,14 @@ class HomeViewModel(
                 .collect { pagingData ->
                     _people.value = pagingData
                 }
+        }
+    }
+
+    fun loadPeopleByUrl(url: String) {
+        viewModelScope.launch {
+            peopleUseCase.getPeopleByUrl(url).collect { people ->
+                _peopleId.value = people
+            }
         }
     }
 

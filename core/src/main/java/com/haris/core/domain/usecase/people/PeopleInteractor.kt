@@ -32,4 +32,8 @@ class PeopleInteractor(
                 }
             }
     }
+
+    override fun getPeopleByUrl(url: String): Flow<People> {
+        return peopleRepository.getPeopleByUrl(url)
+    }
 }

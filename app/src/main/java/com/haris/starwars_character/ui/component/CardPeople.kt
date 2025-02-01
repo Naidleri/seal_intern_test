@@ -1,6 +1,7 @@
 package com.haris.starwars_character.ui.component
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,8 +19,9 @@ import com.haris.starwars_character.ui.theme.Starwars_characterTheme
 fun CardPeople(
     name: String,
     height: Int,
-    modifier: Modifier = Modifier,
-    onClick : () -> Unit
+    url: String? = null,
+    onItemClick: (String) -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
     Card (
         border = BorderStroke(1.dp,MaterialTheme.colorScheme.primary),
@@ -29,6 +31,7 @@ fun CardPeople(
         modifier = modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth()
+            .clickable { url?.let { onItemClick(it) } }
     ){
      Column (
          modifier = modifier
@@ -52,8 +55,7 @@ private fun CardCharacterPrev() {
     Starwars_characterTheme {
         CardPeople(
             name = "Luke Skywalker",
-            height = 172,
-            onClick = {}
+            height = 172
         )
     }
 }

@@ -3,11 +3,16 @@ package com.haris.starwars_character
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.haris.starwars_character.ui.navigation.Screen
 import com.haris.starwars_character.ui.presentation.HomeScreen
+import com.haris.starwars_character.ui.presentation.detail.DetailScreen
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun StarwarsApp(
@@ -20,12 +25,25 @@ fun StarwarsApp(
         modifier = modifier
     ) {
         composable(Screen.Home.route) {
-            HomeScreen()
+            HomeScreen(
+                navigateToDetail = { url ->
+                    navController.navigate(Screen.Detail.createRoute(url))
+                }
+            )
         }
-        composable(Screen.Detail.route) { backStackEntry ->
-            val peopleId = backStackEntry.arguments?.getString("peopleId")?.toIntOrNull()
-            peopleId?.let {
-                /*DetailScreen(peopleId = it, navController = navController)*/
+        composable(
+            route = Screen.Detail.route,
+            arguments = listOf(
+                navArgument("url") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val encodedUrl = backStackEntry.arguments?.getString("url")
+            val url = encodedUrl?.let { URLDecoder.decode(it, StandardCharsets.UTF_8.toString()) }
+            url?.let {
+                DetailScreen(
+                    url = it,
+                    navigateBack = { navController.navigateUp() }
+                )
             }
         }
     }

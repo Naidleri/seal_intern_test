@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface PeopleUseCase {
     fun getPeople(filterOptions: FilterOptions? = null): Flow<PagingData<People>>
+    fun getPeopleByUrl(url: String): Flow<People>
 }
