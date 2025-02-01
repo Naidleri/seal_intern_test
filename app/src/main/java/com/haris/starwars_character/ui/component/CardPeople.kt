@@ -11,8 +11,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.haris.starwars_character.ui.ShimmerEffect
 import com.haris.starwars_character.ui.theme.Starwars_characterTheme
 
 @Composable
@@ -20,34 +22,42 @@ fun CardPeople(
     name: String,
     height: Int,
     url: String? = null,
+    isLoading: Boolean = true,
     onItemClick: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    Card (
-        border = BorderStroke(1.dp,MaterialTheme.colorScheme.primary),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background
-        ),
-        modifier = modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .fillMaxWidth()
-            .clickable { url?.let { onItemClick(it) } }
-    ){
-     Column (
-         modifier = modifier
-             .padding(12.dp)
-     ) {
-         Text(
-             text = name,
-             color = MaterialTheme.colorScheme.onBackground
-         )
-         Text(
-             text = "$height cm",
-             color = MaterialTheme.colorScheme.onBackground
-         )
-     }
-    }
+    ShimmerEffect(
+        isLoading = isLoading,
+        contentAfterLoading = {
+            Card(
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                ),
+                modifier = modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .fillMaxWidth()
+                    .clickable { url?.let { onItemClick(it) } }
+            ) {
+                Column(
+                    modifier = modifier.padding(12.dp)
+                ) {
+                    Text(
+                        text = name,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "$height cm",
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+            }
+        }
+    )
 }
+
 
 @Preview(showBackground = true)
 @Composable

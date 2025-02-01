@@ -64,9 +64,9 @@ fun HeightFilterBottomSheet(
                     )
                     Text(
                         text = when (height) {
-                            HeightFilter.DIBAWAH_160 -> "Below 160"
-                            HeightFilter.ANTARA_160_180 -> "160 - 180"
-                            HeightFilter.DIATAS_180 -> "Above 180"
+                            HeightFilter.DIBAWAH_160 -> "Dibawah 160 cm"
+                            HeightFilter.ANTARA_160_180 -> "160 - 180 cm"
+                            HeightFilter.DIATAS_180 -> "Diatas 180 cm"
                         },
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = modifier.padding(start = 8.dp)
@@ -92,6 +92,7 @@ fun HeightFilterBottomSheet(
                     borderColor = MaterialTheme.colorScheme.primary,
                     textColor = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.weight(1f)
+                        .padding(vertical = 4.dp)
                 )
                 CustomButton(
                     text = "Terapkan",
@@ -103,6 +104,7 @@ fun HeightFilterBottomSheet(
                     filledColor = MaterialTheme.colorScheme.primary,
                     textColor = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.weight(1f)
+                        .padding(vertical = 4.dp)
                 )
             }
         }

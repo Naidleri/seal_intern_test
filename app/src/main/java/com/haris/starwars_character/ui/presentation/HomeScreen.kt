@@ -141,6 +141,7 @@ fun HomeContent(
                             height = it.height?.toIntOrNull() ?: 0,
                             url = it.url,
                             onItemClick = { url -> navigateToDetail(url) },
+                            isLoading = false,
                             modifier = Modifier
                         )
                     }

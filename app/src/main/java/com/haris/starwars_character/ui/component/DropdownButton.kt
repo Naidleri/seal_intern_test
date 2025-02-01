@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.haris.starwars_character.ui.ShimmerEffect
 import com.haris.starwars_character.ui.theme.Starwars_characterTheme
 
 @Composable
@@ -31,39 +32,46 @@ fun DropdownButton(
     textOn: String,
     textOff: String,
     onStateChanged: (Boolean) -> Unit,
+    isLoading: Boolean = false // Menambahkan flag isLoading
 ) {
-    var isToggled by remember { mutableStateOf(initialState) }
+    ShimmerEffect(
+        isLoading = isLoading,
+        contentAfterLoading = {
+            var isToggled by remember { mutableStateOf(initialState) }
 
-    Button(
-        onClick = {
-            isToggled = !isToggled
-            onStateChanged(isToggled)
-        },
-        colors = ButtonDefaults.buttonColors(
-            containerColor = if (isToggled) MaterialTheme.colorScheme.primary else Color.Transparent,
-            contentColor = if (isToggled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
-        ),
-        border = BorderStroke(
-            width = if (isToggled) 0.dp else 1.dp,
-            color = if (isToggled) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
-        ),
-        modifier = modifier
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = if (isToggled) textOn else textOff,
-                fontWeight = if (isToggled) FontWeight.Medium else FontWeight.Normal
-            )
-            Icon(
-                imageVector = if (isToggled) Icons.Default.KeyboardArrowUp else Icons.Default.ArrowDropDown,
-                contentDescription = if (isToggled) "Collapse" else "Expand"
-            )
+            Button(
+                onClick = {
+                    isToggled = !isToggled
+                    onStateChanged(isToggled)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isToggled) MaterialTheme.colorScheme.primary else Color.Transparent,
+                    contentColor = if (isToggled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary
+                ),
+                border = BorderStroke(
+                    width = if (isToggled) 0.dp else 1.dp,
+                    color = if (isToggled) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+                ),
+                modifier = modifier
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = if (isToggled) textOn else textOff,
+                        fontWeight = if (isToggled) FontWeight.Medium else FontWeight.Normal
+                    )
+                    Icon(
+                        imageVector = if (isToggled) Icons.Default.KeyboardArrowUp else Icons.Default.ArrowDropDown,
+                        contentDescription = if (isToggled) "Collapse" else "Expand"
+                    )
+                }
+            }
         }
-    }
+    )
 }
+
 
 @Preview
 @Composable

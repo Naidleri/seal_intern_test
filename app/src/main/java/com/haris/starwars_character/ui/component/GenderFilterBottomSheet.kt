@@ -88,6 +88,7 @@ fun GenderFilterBottomSheet(
                     borderColor = MaterialTheme.colorScheme.primary,
                     textColor = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.weight(1f)
+                        .padding(vertical = 4.dp)
                 )
                 CustomButton(
                     text = "Terapkan",
@@ -99,6 +100,7 @@ fun GenderFilterBottomSheet(
                     filledColor = MaterialTheme.colorScheme.primary,
                     textColor = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.weight(1f)
+                        .padding(vertical = 4.dp)
                 )
             }
         }

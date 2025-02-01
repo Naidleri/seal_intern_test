@@ -42,7 +42,9 @@ fun StarwarsApp(
             url?.let {
                 DetailScreen(
                     url = it,
-                    navigateBack = { navController.navigateUp() }
+                    navigateBack = {
+                        navController.popBackStack()
+                    }
                 )
             }
         }

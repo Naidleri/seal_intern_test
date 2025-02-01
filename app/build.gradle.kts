@@ -65,6 +65,8 @@ dependencies {
     implementation (libs.koin.androidx.compose)
     implementation(libs.androidx.navigation.compose)
     implementation (libs.lottie.compose)
+    implementation (libs.compose.shimmer)
+    implementation (libs.accompanist.placeholder.material)
 
     implementation(project(":core"))
 }
