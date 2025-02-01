@@ -2,6 +2,7 @@ package com.haris.starwars_character.ui.presentation.detail
 
 import android.content.Intent
 import android.provider.Settings
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.haris.core.domain.model.People
 import com.haris.starwars_character.ui.component.DetailItem
 import com.haris.starwars_character.ui.component.ErrorModalBottomSheet
+import com.haris.starwars_character.ui.component.LoadingScreen
 import com.haris.starwars_character.ui.presentation.HomeViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -39,35 +41,61 @@ fun DetailScreen(
     val people by viewModel.peopleId.collectAsState()
     val context = LocalContext.current
     var showErrorSheet by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(true) }
+    var hasError by remember { mutableStateOf(false) }
 
     LaunchedEffect(url) {
+        isLoading = true
+        hasError = false
         viewModel.loadPeopleByUrl(url)
     }
 
     LaunchedEffect(people) {
-        showErrorSheet = people == null
+        if (people == null && !isLoading) {
+            hasError = true
+            showErrorSheet = true
+        }
+        isLoading = false
     }
 
-    ErrorModalBottomSheet(
-        isVisible = showErrorSheet,
-        onDismiss = { showErrorSheet = false },
-        message = "Gagal mengambil data, coba lagi",
-        onRetry = { viewModel.loadPeopleByUrl(url) },
-        onCancel = {
-            val intent = Intent(Settings.ACTION_SETTINGS)
-            context.startActivity(intent)
+    BackHandler {
+        if (showErrorSheet) {
+            showErrorSheet = false
+        } else {
+            navigateBack()
         }
-    )
+    }
 
-    people?.let {
-        DetailContent(people = it, modifier = modifier)
+    if (isLoading) {
+        LoadingScreen()
+    }
+
+    if (showErrorSheet) {
+        ErrorModalBottomSheet(
+            isVisible = true,
+            onDismiss = { showErrorSheet = false },
+            message = "Gagal mengambil data, coba lagi",
+            onRetry = {
+                isLoading = true
+                viewModel.loadPeopleByUrl(url)
+            },
+            onCancel = {
+                val intent = Intent(Settings.ACTION_SETTINGS)
+                context.startActivity(intent)
+            }
+        )
+    }
+
+    if (!hasError && people != null) {
+        DetailContent(people = people!!, modifier = modifier)
     }
 }
+
 
 @Composable
 fun DetailContent(
     people: People,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -99,13 +127,22 @@ fun DetailContent(
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
-            modifier = modifier.padding(vertical = 8.dp,horizontal = 16.dp)
+            modifier = modifier.padding(vertical = 8.dp, horizontal = 16.dp)
         )
-        people.films?.forEach { film ->
+        if (people.films.isNullOrEmpty()) {
             Text(
-                text = film ?: "Unknown",
+                text = "Unknown",
                 color = MaterialTheme.colorScheme.onBackground,
-                modifier = modifier.padding(vertical = 4.dp,horizontal = 16.dp))
+                modifier = modifier.padding(vertical = 4.dp, horizontal = 16.dp)
+            )
+        } else {
+            people.films!!.forEach { film ->
+                Text(
+                    text = film ?: "Unknown",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = modifier.padding(vertical = 4.dp, horizontal = 16.dp)
+                )
+            }
         }
 
         Spacer(modifier = modifier.height(16.dp))
@@ -115,13 +152,22 @@ fun DetailContent(
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
-            modifier = modifier.padding(vertical = 8.dp,horizontal = 16.dp)
+            modifier = modifier.padding(vertical = 8.dp, horizontal = 16.dp)
         )
-        people.vehicles?.forEach { vehicle ->
+        if (people.vehicles.isNullOrEmpty()) {
             Text(
-                text = vehicle ?: "Unknown",
+                text = "Unknown",
                 color = MaterialTheme.colorScheme.onBackground,
-                modifier = modifier.padding(vertical = 4.dp,horizontal = 16.dp))
+                modifier = modifier.padding(vertical = 4.dp, horizontal = 16.dp)
+            )
+        } else {
+            people.vehicles!!.forEach { vehicle ->
+                Text(
+                    text = vehicle ?: "Unknown",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = modifier.padding(vertical = 4.dp, horizontal = 16.dp)
+                )
+            }
         }
 
         Spacer(modifier = modifier.height(16.dp))
@@ -131,13 +177,22 @@ fun DetailContent(
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
-            modifier = modifier.padding(vertical = 8.dp,horizontal = 16.dp)
+            modifier = modifier.padding(vertical = 8.dp, horizontal = 16.dp)
         )
-        people.starships?.forEach { starship ->
+        if (people.starships.isNullOrEmpty()) {
             Text(
-                text = starship ?: "Unknown",
+                text = "Unknown",
                 color = MaterialTheme.colorScheme.onBackground,
-                modifier = modifier.padding(vertical = 4.dp,horizontal = 16.dp))
+                modifier = modifier.padding(vertical = 4.dp, horizontal = 16.dp)
+            )
+        } else {
+            people.starships!!.forEach { starship ->
+                Text(
+                    text = starship ?: "Unknown",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = modifier.padding(vertical = 4.dp, horizontal = 16.dp)
+                )
+            }
         }
     }
 }
