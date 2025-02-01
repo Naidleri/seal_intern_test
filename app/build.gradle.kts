@@ -56,4 +56,14 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    debugImplementation (libs.leakcanary.android)
+
+    implementation (libs.androidx.lifecycle.runtime.ktx)
+    implementation (libs.kotlinx.coroutines.core)
+    implementation(libs.androidx.paging.compose)
+    implementation (libs.koin.android)
+    implementation (libs.koin.androidx.compose)
+    implementation ("com.airbnb.android:lottie-compose:6.0.0")
+
+    implementation(project(":core"))
 }
