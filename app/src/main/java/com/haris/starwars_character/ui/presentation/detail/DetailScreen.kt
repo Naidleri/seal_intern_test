@@ -65,14 +65,13 @@ fun DetailScreen(
             navigateBack()
         }
     }
-
     if (isLoading) {
         LoadingScreen()
     }
 
     if (showErrorSheet) {
         ErrorModalBottomSheet(
-            isVisible = true,
+            isVisible = showErrorSheet,
             onDismiss = { showErrorSheet = false },
             message = "Gagal mengambil data, coba lagi",
             onRetry = {
@@ -87,7 +86,11 @@ fun DetailScreen(
     }
 
     if (!hasError && people != null) {
-        DetailContent(people = people!!, modifier = modifier)
+        DetailContent(
+            people = people!!,
+            modifier = modifier,
+            onBackClick = navigateBack
+        )
     }
 }
 
@@ -96,6 +99,7 @@ fun DetailScreen(
 fun DetailContent(
     people: People,
     modifier: Modifier = Modifier,
+    onBackClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier
